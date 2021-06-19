@@ -12,8 +12,6 @@ namespace C_program
         {
             ModelDoc2 swModel;
             ModelDoc2 swDrawing;
-            ModelDocExtension swExt;
-            SelectionMgr swSelMgr;
             string fileName = null;
             string fileName1 = null;
             int errors = 0;
@@ -59,10 +57,22 @@ namespace C_program
             {
                 Console.Write("\n" + position);
                 fileName = position + ".sldprt";
-                swModel = (ModelDoc2)swapp.OpenDoc6(fileName, 1, 1, "", ref errors, ref warnings);
-                swapp.RunMacro2(macrofilename, "step", "main", 1, out errors1);
-                swapp.RunMacro2(macrofilename1, "stl", "main", 1, out errors1);
-                swapp.CreateNewWindow();
+                if (File.Exists(fileName) == true)
+                {
+                    swModel = (ModelDoc2)swapp.OpenDoc6(fileName, 1, 1, "", ref errors, ref warnings);
+                    swapp.RunMacro2(macrofilename, "step", "main", 1, out errors1);
+                    swapp.RunMacro2(macrofilename1, "stl", "main", 1, out errors1);
+                    swapp.CreateNewWindow();
+                }
+                else
+                {
+                    fileName = position + ".sldasm";
+                    Console.Write(" - to złożenie.");
+                    swModel = (ModelDoc2)swapp.OpenDoc6(fileName, 2, 1, "", ref errors, ref warnings);
+                    swapp.RunMacro2(macrofilename, "step", "main", 1, out errors1);
+                    swapp.RunMacro2(macrofilename1, "stl", "main", 1, out errors1);
+                    swapp.CreateNewWindow();
+                }
 
                 swapp.ExitApp();
                 Thread.Sleep(1500);
@@ -79,7 +89,7 @@ namespace C_program
                 }
                 else
                 {
-                    Console.Write("plik '.slddrw' z rysunkiem nie istnieje.");
+                    Console.Write("  ==> plik '.slddrw' z rysunkiem nie istnieje.");
                 }
 
                 Console.Write("  ==> wykonano!!");
@@ -96,7 +106,7 @@ namespace C_program
                 sw.WriteLine("ok");
             }
 
-            Console.WriteLine("ZAKOŃCZONO KONWERSJE PLIKÓW.");
+            Console.WriteLine("\n\n ZAKOŃCZONO KONWERSJE PLIKÓW.");
             Console.WriteLine("POCZEKAJ NA ZAKOŃCZENIE OPERACJI PRZENOSZENIA PLIKÓW DO ODPOWIEDNICH FOLDERÓW.");
         }
         public static SldWorks swapp = new SldWorks();
