@@ -12,6 +12,7 @@ namespace C_program
         {
             ModelDoc2 swModel;
             ModelDoc2 swDrawing;
+            Frame pFrame;
             string fileName = null;
             string fileName1 = null;
             int errors = 0;
@@ -52,6 +53,8 @@ namespace C_program
             }
 
             Console.WriteLine("\n\n ROZPOCZĘCIE KONWERSJI: \n");
+            pFrame = (Frame)swapp.Frame();
+            pFrame.KeepInvisible = true;
 
             foreach (string position in result)
             {
@@ -74,6 +77,7 @@ namespace C_program
                     swapp.CreateNewWindow();
                 }
 
+                swapp.CloseAllDocuments(true);
                 swapp.ExitApp();
                 Thread.Sleep(1500);
 
@@ -83,7 +87,10 @@ namespace C_program
                     swDrawing = (ModelDoc2)swapp.OpenDoc6(fileName1, 3, 1, "", ref errors, ref warnings);
                     swapp.RunMacro2(macrofilename2, "dxf", "main", 1, out errors1);
                     swapp.RunMacro2(macrofilename3, "pdf", "main", 1, out errors1);
+                    pFrame.KeepInvisible = false;
+                    swapp.Visible = true;
                     swapp.CreateNewWindow();
+                    swapp.CloseAllDocuments(true);
                     swapp.ExitApp();
                     Thread.Sleep(1500);
                 }
